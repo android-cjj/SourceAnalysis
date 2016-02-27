@@ -322,7 +322,7 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 3. 消耗Y轴的偏移量.
 
-其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除BehaviorView消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为View 消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
+其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除BehaviorView消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为BehaviorView消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
 
 `onStopNestedScroll`在Nestd事件结束触发.
 主要做的事情:
@@ -330,8 +330,6 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 `onNestedPreFling`是确定NestedScrollingChild 是否响应fling事件.
 处理逻辑是:发起Nested事件要与onLayoutChild 找到的那个控件一致且当前状态是一个STATE_EXPANDED状态.
-
-
 
 
 在说说一个小技巧，Android官网中有这样一句话：[Enums often require more than twice as much memory as static constants. You should strictly avoid using enums on Android](http://developer.android.com/intl/zh-cn/training/articles/memory.html),就是说枚举比静态常量更加耗费内存，我们应该避免使用，然后我看BottomSheetBehavior源码中 mState 是这样定义的：
