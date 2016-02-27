@@ -326,7 +326,7 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 `onStopNestedScroll`在Nestd事件结束触发.
 主要做的事情:
-根据View当前的状态对BehaviorView 的最终位置的确定,有必要的话调用mViewDragHelper 进行滑动.
+根据BehaviorView当前的状态对BehaviorView 的最终位置的确定,有必要的话调用mViewDragHelper 进行滑动.
 
 `onNestedPreFling`是确定NestedScrollingChild 是否响应fling事件.
 处理逻辑是:发起Nested事件要与onLayoutChild 找到的那个控件一致且当前状态是一个STATE_EXPANDED状态.
