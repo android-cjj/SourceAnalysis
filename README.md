@@ -177,7 +177,8 @@ if (!intercepted && b != null) {
         /*
         * 省略部分代码
         */
-        //拦截条件是touch 点击的位置是该 View 的范围内,并且是 MotionEvent.ACTION_MOVE 操作时候拦截,移动交给mViewDragHelper
+        //拦截条件是touch 点击的位置是该 View 的范围内,并且是 MotionEvent.ACTION_MOVE 操作时候拦截,
+        //移动交给mViewDragHelper
         if (!mIgnoreEvents && mViewDragHelper.shouldInterceptTouchEvent(event)) {
             return true;
         }
@@ -286,7 +287,7 @@ if (!intercepted && b != null) {
 
 其实是我想出去外面玩玩了，毕竟大好周末啊！
 
-###ave a nice weekend ! Bye bye.
+###Have a nice weekend ! Bye bye.
 
 
   
