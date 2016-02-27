@@ -105,7 +105,9 @@ BottomSheetBehavior的定义如下
 ###view布局
 当你的View持有Behavior的时候,
 CoordinatorLayout 在 onLayout 的时候会调用`Behavior.onLayoutChild`方法进行布局.
-注意:我们将持有的Behavior 的View 叫做BehaviorView
+
+####注意:我们将持有的Behavior 的View 叫做BehaviorView
+
 我们查看onLayoutChild 的源码
 ```java
     @Override
@@ -141,14 +143,14 @@ CoordinatorLayout 在 onLayout 的时候会调用`Behavior.onLayoutChild`方法�
 
 3. 始化了ViewDragHelper 类.ViewDragHelper是一个非常厉害的组件.我们这边使用它处理进行拖拽和滑动事件.
 
-4. 存储BehaviorView 的软引用和递归找到第一个NestedScrollingChild组件,当然NestedScrollingChild也可以为空.下面的逻辑对于NestedScrollingChild为空的情况可以有处理的.
+4. 存储BehaviorView 的软引用和递归找到第一个NestedScrollingChild组件,当然NestedScrollingChild也可以为空.下面的逻辑对于NestedScrollingChild为空的情况做了处理的.
 
 onLayoutChild做的事情还是挺少的.算是一些初始化的东西
 
 因为State 默认为STATE_COLLAPSED,偏移量为ParentHeight - PeekHeight, 这时候BehaviorView 被往下调整了,露出屏幕的高度为PeekHeight 的大小.
 
 在Android 5.0上可能是因为优化的原因还是别的因素. 当一开始的
-PeekHeight为0的时候 整个BehaviorView 被移到屏幕外, 它的不会被绘制上去.导致你看不到BehaviorView的画面,但是它是存在的.实实在在存在着
+PeekHeight为0的时候 整个BehaviorView 被移到屏幕外, 它就不会被绘制上去.导致你看不到BehaviorView的画面,但是它是存在的.实实在在存在着
 
 我的好基友dim给出了解决方案[Android support 23.2 使用BottomSheetBehavior 的坑](http://www.jianshu.com/p/21bb14e3be94)
 
@@ -316,9 +318,9 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 1. 判断发起NestedScrolling 是否是我们在onLayoutChild 找到的那个控件.不是的话,不做处理.
 
-2. 根据dy 判断方向,根据之前的便宜范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对View 进行偏移摆放
+2. 根据dy 判断方向,根据之前的偏移范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对View 进行偏移摆放
 
-3. 消耗y轴的偏移量.
+3. 消耗Y轴的偏移量.
 
 其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除View 消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为View 消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
 
