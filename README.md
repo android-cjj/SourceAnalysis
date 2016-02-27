@@ -34,7 +34,7 @@ BottomSheets源码解析
         });
 ```
 
-对于切换状态,你也可以手动调用`behavior.setState(int state);` state 的值你可以看我的上一篇(链接)
+对于切换状态,你也可以手动调用`behavior.setState(int state);` state 的值你可以看我的上一篇[戳我](https://github.com/android-cjj/BottomSheets/blob/master/README.md)
 
 BottomSheetBehavior的定义如下
 
@@ -358,7 +358,7 @@ onNestedPreScroll 方法主要做几件事情:
 
 ```
 弥补了Android不建议使用枚举的缺陷。
-其实是我想出去外面玩玩了，毕竟大好周末啊！
+
 
 ###Have a nice weekend ! Bye bye.
 
