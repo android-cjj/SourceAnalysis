@@ -286,7 +286,7 @@ if (!intercepted && b != null) {
 
 其实是我想出去外面玩玩了，毕竟大好周末啊！
 
-Have a nice weekend ! Bye bye.
+###ave a nice weekend ! Bye bye.
 
 
   
