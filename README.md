@@ -273,8 +273,8 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
             return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;//滑动Y轴方向的判断
     }
 ```
-返回 true :表示 当前View 要和NestedScrollingChild 配合消耗这个 NestedScrolling 事件,这里可以看出只要是纵向的滑动都会返回true.
-返回true以后的NestedScrollingChild的滑动会触发`onNestedPreScroll` 方法,询问View 是否消耗Y轴的滑动.
+返回 true :表示 BehaviorView 要和NestedScrollingChild 配合消耗这个 NestedScrolling 事件,这里可以看出只要是纵向的滑动都会返回true.
+返回true以后的NestedScrollingChild的滑动会触发`onNestedPreScroll` 方法,询问BehaviorView是否消耗Y轴的滑动.
 ```java
   @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
@@ -318,11 +318,11 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 1. 判断发起NestedScrolling 是否是我们在onLayoutChild 找到的那个控件.不是的话,不做处理.
 
-2. 根据dy 判断方向,根据之前的偏移范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对View 进行偏移摆放
+2. 根据dy 判断方向,根据之前的偏移范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对BehaviorView 进行偏移摆放
 
 3. 消耗Y轴的偏移量.
 
-其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除View 消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为View 消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
+其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除BehaviorView消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为View 消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
 
 `onStopNestedScroll`在Nestd事件结束触发.
 主要做的事情:
