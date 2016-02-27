@@ -5,7 +5,7 @@ BottomSheets源码解析
 
  <img src="https://material-design.storage.googleapis.com/publish/material_v_4/material_ext_publish/0Bzhp5Z4wHba3dDZKN1lHNG1TekU/components_bottomsheets_usage1.png" width="360" height="640" />
 
-这篇文章我带大家撸撸BottomSheetBehavior的源码，能力有限，写的不好的地方，请尽力吐槽。好了，不说废话，直接主题
+这篇文章我带大家看看BottomSheetBehavior的源码，能力有限，写的不好的地方，请尽力吐槽。好了，不说废话，直接主题
 
 我们先简单的看下用法
 ```java
@@ -18,25 +18,17 @@ BottomSheets源码解析
                 //这里是bottomSheet 状态的改变回调
             }
 
-
-/**
- * Called when the bottom sheet is being dragged.
- *
- * @param bottomSheet The bottom sheet view.
- * @param slideOffset The new offset of this bottom sheet within its range, from 0 to 1
- *                    when it is moving upward, and from 0 to -1 when it moving downward.
- */
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 //这里是拖拽中的回调，根据slideOffset可以做一些动画
-               slideOffset: 表示
             }
         });
+    }
 ```
 
-对于切换状态,你也可以手动调用`behavior.setState(int state);` state 的值你可以看我的上一篇(链接)
+对于切换状态,你也可以手动调用`behavior.setState(int state);` state 的值你可以看我的上一篇[戳我]((https://github.com/android-cjj/BottomSheets/blob/master/README.md))
 
-BottomSheetBehavior的定义如下
+BottomSheetBehavior类的定义如下
 
 ```java
     public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V>
