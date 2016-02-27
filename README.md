@@ -15,7 +15,7 @@ BottomSheets源码解析
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                //这里是bottomSheet 状态的改变，根据slideOffset可以做一些动画
+                //这里是bottomSheet 状态的改变回调
             }
 
             @Override
