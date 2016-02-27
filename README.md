@@ -15,21 +15,12 @@ BottomSheets源码解析
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                //这里是bottomSheet 状态的改变回调
+                //这里是bottomSheet 状态的改变，根据slideOffset可以做一些动画
             }
 
-
-/**
- * Called when the bottom sheet is being dragged.
- *
- * @param bottomSheet The bottom sheet view.
- * @param slideOffset The new offset of this bottom sheet within its range, from 0 to 1
- *                    when it is moving upward, and from 0 to -1 when it moving downward.
- */
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 //这里是拖拽中的回调，根据slideOffset可以做一些动画
-               slideOffset: 表示
             }
         });
 ```
@@ -163,7 +154,7 @@ PeekHeight为0的时候 整个BehaviorView 被移到屏幕外, 它的不会被�
 
 
 ###事件拦截
-touch 事件会先被onInterceptTouchEvent()捕获,进行判断是否拦截.
+####touch 事件会先被onInterceptTouchEvent()捕获,进行判断是否拦截.
 
 ```java
 
@@ -218,7 +209,7 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 }
 ```
 
-onInterceptTouchEvent 做了几件事情:
+####onInterceptTouchEvent 做了几件事情:
 
 1. 判断是否拦截事件.
 
@@ -230,7 +221,7 @@ onInterceptTouchEvent 做了几件事情:
 
 5. ACTION_UP 和ACTION_CANCEL 对条件的复位
 
-onTouchEvent处理
+####onTouchEvent处理
 ```java
 
  @Override
@@ -261,7 +252,7 @@ onTouchEvent处理
         return true;
     }
 ```
-onTouchEvent 主要做了几件事情:
+####onTouchEvent 主要做了几件事情:
 
 1. 使用mVelocityTracker 记录手指动作.
 
@@ -321,7 +312,7 @@ onTouchEvent 主要做了几件事情:
     }
 
 ```
-onNestedPreScroll 方法主要做几件事情:
+####onNestedPreScroll 方法主要做几件事情:
 
 1. 判断发起NestedScrolling 是否是我们在onLayoutChild 找到的那个控件.不是的话,不做处理.
 
