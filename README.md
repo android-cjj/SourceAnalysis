@@ -216,7 +216,7 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 
 2. 使用mVelocityTracker 记录手指动作,用于后期计算Y 轴速率.
 
-3. 判断点击事件是否在NestedChildView 上,将 boolean 存到mTouchingScrollingChild 标记位中,这个主要是用于ViewDragHelper.Callback  中的判断,逻辑后面讲.
+3. 判断点击事件是否在NestedChildView 上,将 boolean 存到mTouchingScrollingChild 标记位中,这个主要是用于ViewDragHelper.Callback  中的判断.
 
 4. ACTION_UP 和ACTION_CANCEL 对标记位进行复位,好在下一轮 Touch 事件中使用.
 
