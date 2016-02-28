@@ -378,7 +378,7 @@ ViewDragHelper网上教程挺多的,就不多讲了,他主要是处理滑动拖�
 转载请注明出处，不然我咬你哦！
 
 
-####thanks:[轻微zzz40500](https://github.com/zzz40500) [dim](http://www.jianshu.com/users/8a2e2f6c64d7/latest_articles) 
+thanks: dim [微博](http://weibo.com/u/5579192921?from=myfollow_all&is_all=1)[github](https://github.com/zzz40500) [简书](http://www.jianshu.com/users/8a2e2f6c64d7/latest_articles) 
 
 
 
