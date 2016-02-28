@@ -212,7 +212,7 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 ```
 ####onInterceptTouchEvent 做了几件事情:
 
-1. 判断是否拦截事件.先使用mViewDragHelper.shouldInterceptTouchEvent(event))拦截.
+1. 判断是否拦截事件.先使用mViewDragHelper.shouldInterceptTouchEvent(event)拦截.
 
 2. 使用mVelocityTracker 记录手指动作,用于后期计算Y 轴速率.
 
@@ -333,7 +333,7 @@ NestedScrollingChild的在滑动的时候会触发`onNestedPreScroll` 方法,询
 使用上面计算的Y轴的速率的判断.是否应该切换到Hideable 的状态.
 
 ####onNestedPreFling
-这个是 NestedScrollingChild 要滑行时候触发的询问 BehaviorView是否消耗这个滑行.
+这个是 NestedScrollingChild 要滑行时候触发的,询问 BehaviorView是否消耗这个滑行.
 ```
 
 @Override
