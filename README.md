@@ -139,7 +139,7 @@ CoordinatorLayout 在 onLayout 的时候会调用`Behavior.onLayoutChild`方法�
 
 1. 对BehaviorView 的摆放:先调用父类 对 BehaviorView 进行布局,根据 PeekHeight 和 State 对 BehaviorView 位置的进行偏移,偏移到合适的位置.
 
-2. 对mMinOffset,mMaxOffset的计算,根据mMinOffset 和mMaxOffset 可以确定BehaviorView 的偏移范围.
+2. 对mMinOffset,mMaxOffset的计算,根据mMinOffset 和mMaxOffset 可以确定BehaviorView 的偏移范围.即 距离CoordinatorLayout 原点 Y轴mMinOffset 到mMaxOffset;
 
 3. 始化了ViewDragHelper 类.ViewDragHelper是一个非常厉害的组件.我们这边使用它处理进行拖拽和滑动事件.
 
@@ -210,18 +210,15 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
             Math.abs(mInitialY - event.getY()) > mViewDragHelper.getTouchSlop();
 }
 ```
-
 ####onInterceptTouchEvent 做了几件事情:
 
-1. 判断是否拦截事件.
+1. 判断是否拦截事件.先使用mViewDragHelper.shouldInterceptTouchEvent(event))拦截.
 
-2. 使用mVelocityTracker 记录手指动作.
+2. 使用mVelocityTracker 记录手指动作,用于后期计算Y 轴速率.
 
-3. 判断点击事件是否在NestedChildView 上
+3. 判断点击事件是否在NestedChildView 上,将 boolean 存到mTouchingScrollingChild 标记位中,这个主要是用于ViewDragHelper.Callback  中的判断,逻辑后面讲.
 
-4. 使用mViewDragHelper 对事件的拦截.
-
-5. ACTION_UP 和ACTION_CANCEL 对条件的复位
+4. ACTION_UP 和ACTION_CANCEL 对标记位进行复位,好在下一轮 Touch 事件中使用.
 
 ####onTouchEvent处理
 ```java
@@ -256,13 +253,14 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 ```
 ####onTouchEvent 主要做了几件事情:
 
-1. 使用mVelocityTracker 记录手指动作.
+1. 使用mVelocityTracker 记录手指动作.用于后期计算Y 轴速率.
 
 2. 使用mViewDragHelper 处理Touch 事件.可能会产生拖动效果.
 
-3. mViewDragHelper 对BehaviorView 的再一次捕获.这个的效果让你即使Touch事件不在BehaviorView的也可是产生拖动的效果.
-这里需要注意的是即使你的onInterceptTouchEvent 返回false,也可能因为下面的View 没有人处理这个Touch事件,而导致Behavior的onTouchEvent 被调用.
+3. mViewDragHelper 在滑动的时候对BehaviorView 的再一次捕获.再一次明确告诉ViewDragHelper 我要移动的是BehaviorView 组件.什么情况需要主动告诉ViewDragHelper ?比如:当你点击在BehaviorView 的区域,但是BehaviorView 的视图的层级不是最高的,或者你点击的区域不在 BehaviorView 上,ViewDragHelper 在做处理滑动的时候找不到BehaviorView, 这个时候你要手动告知它现在要移动的是BehaviorView,情景类似ViewDragHelper处理EdgeDrag 的样子.
 
+####注意
+即使你的onInterceptTouchEvent 返回false,也可能因为下面的View 没有处理这个Touch事件,而导致Touch 事件上发被Behavior的onTouchEvent 被截取.
 
 ### NestedScrolling事件处理
 当 CoordinatorLayout 的子控件有 NestedScrollingChild 产生 Nested 事件的时候.会调用onStartNestedScroll 这个方法
@@ -273,8 +271,11 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
             return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;//滑动Y轴方向的判断
     }
 ```
-返回 true :表示 BehaviorView 要和NestedScrollingChild 配合消耗这个 NestedScrolling 事件,这里可以看出只要是纵向的滑动都会返回true.
-返回true以后的NestedScrollingChild的滑动会触发`onNestedPreScroll` 方法,询问BehaviorView是否消耗Y轴的滑动.
+返回值 true :表示 BehaviorView 要和NestedScrollingChild 配合消耗这个 NestedScrolling 事件,这里可以看出只要是纵向的滑动都会返回true.
+
+
+####onNestedPreScroll
+NestedScrollingChild的在滑动的时候会触发`onNestedPreScroll` 方法,询问BehaviorView消耗多少Y轴上面的滑动.
 ```java
   @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
@@ -316,20 +317,40 @@ public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEv
 ```
 ####onNestedPreScroll 方法主要做几件事情:
 
-1. 判断发起NestedScrolling 是否是我们在onLayoutChild 找到的那个控件.不是的话,不做处理.
+1. 判断发起NestedScrolling 的 View 是否是我们在onLayoutChild 找到的那个控件.不是的话,不做处理.不处理就是不消耗y 轴,把所有的Scroll 交给发起的 View 自己消耗.
 
-2. 根据dy 判断方向,根据之前的偏移范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对BehaviorView 进行偏移摆放
+2. 根据dy 判断方向,根据之前的偏移范围算出偏移量.使用`ViewCompat.offsetTopAndBottom` 对BehaviorView 进行偏移操作.
 
-3. 消耗Y轴的偏移量.
+3. 消耗Y轴的偏移量.发起 NestedScrollingChild 会自动响应剩下的部分
 
-其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除BehaviorView消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为BehaviorView消耗了10像素,那么最后NestedScrollingChild 只滑动了10像素);
+其中comsume[]是个数组,consumed[1]表示 Parent 在 Y 轴消耗的值, NestedScrollingChild 会消耗除BehaviorView消耗剩下的那部分( 比如: NestedScrollingChild 要滑动20像素,因为BehaviorView消耗了10像素,最后NestedScrollingChild 只滑动了10像素);
 
 `onStopNestedScroll`在Nestd事件结束触发.
 主要做的事情:
-根据BehaviorView当前的状态对BehaviorView 的最终位置的确定,有必要的话调用mViewDragHelper 进行滑动.
+根据BehaviorView当前的状态对它的最终位置的确定,有必要的话调用`ViewDragHelper.smoothSlideViewTo` 进行滑动.
+###注意
+当你是往下滑动且Hideable 为 true ,他会
+使用上面计算的Y轴的速率的判断.是否应该切换到Hideable 的状态.
 
-`onNestedPreFling`是确定NestedScrollingChild 是否响应fling事件.
+####onNestedPreFling
+这个是 NestedScrollingChild 要滑行时候触发的询问 BehaviorView是否消耗这个滑行.
+```
+
+@Override
+public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, V child, View target,
+                                float velocityX, float velocityY) {
+    return target == mNestedScrollingChildRef.get() &&
+            (mState != STATE_EXPANDED ||
+                    super.onNestedPreFling(coordinatorLayout, child, target,
+                            velocityX, velocityY));
+}
+```
 处理逻辑是:发起Nested事件要与onLayoutChild 找到的那个控件一致且当前状态是一个STATE_EXPANDED状态.
+
+返回值: true表示BehaviorView 消耗滑行事件,那么NestedScrollingChild就不会有滑行了
+
+###ViewDragHelper.Callback
+ViewDragHelper网上教程挺多的,就不多讲了,他主要是处理滑动拖拽的.
 
 
 在说说一个小技巧，Android官网中有这样一句话：[Enums often require more than twice as much memory as static constants. You should strictly avoid using enums on Android](http://developer.android.com/intl/zh-cn/training/articles/memory.html),就是说枚举比静态常量更加耗费内存，我们应该避免使用，然后我看BottomSheetBehavior源码中 mState 是这样定义的：
