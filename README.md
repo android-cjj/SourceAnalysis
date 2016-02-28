@@ -328,7 +328,7 @@ NestedScrollingChild的在滑动的时候会触发`onNestedPreScroll` 方法,询
 `onStopNestedScroll`在Nestd事件结束触发.
 主要做的事情:
 根据BehaviorView当前的状态对它的最终位置的确定,有必要的话调用`ViewDragHelper.smoothSlideViewTo` 进行滑动.
-###注意
+####注意
 当你是往下滑动且Hideable 为 true ,他会
 使用上面计算的Y轴的速率的判断.是否应该切换到Hideable 的状态.
 
@@ -349,10 +349,11 @@ public boolean onNestedPreFling(CoordinatorLayout coordinatorLayout, V child, Vi
 
 返回值: true表示BehaviorView 消耗滑行事件,那么NestedScrollingChild就不会有滑行了
 
-###ViewDragHelper.Callback
+####ViewDragHelper.Callback
 ViewDragHelper网上教程挺多的,就不多讲了,他主要是处理滑动拖拽的.
 
 
+####小技巧
 在说说一个小技巧，Android官网中有这样一句话：[Enums often require more than twice as much memory as static constants. You should strictly avoid using enums on Android](http://developer.android.com/intl/zh-cn/training/articles/memory.html),就是说枚举比静态常量更加耗费内存，我们应该避免使用，然后我看BottomSheetBehavior源码中 mState 是这样定义的：
 ```java
     public static final int STATE_DRAGGING = 1;
